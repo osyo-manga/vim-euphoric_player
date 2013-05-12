@@ -3,12 +3,12 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 
-function! unite#sources#euphoric_player_playlist#define()
+function! unite#sources#euphoric_player_playlists#define()
 	return s:source
 endfunction
 
 let s:source = {
-\	"name" : "euphoric_player_playlist",
+\	"name" : "euphoric_player_playlists",
 \	"description" : "iTunes playlist list",
 \	"sorters" : "sorter_nothing",
 \}

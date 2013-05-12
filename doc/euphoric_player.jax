@@ -1,0 +1,112 @@
+euphoric_player.txt	Vim から iTunes のプレイリストを操作する
+
+
+==============================================================================
+概要						*euphoric_player-introduction*
+
+*euphoric_player* は Vim で iTunes のプレイリストを操作する為のプラグインです。
+
+
+==============================================================================
+使い方						*euphoric_player-usage*
+
+基本的には |unite.vim| を使用してプレイリストを操作します。
+
+- |unite.vim| - https://github.com/Shougo/unite.vim
+
+
+==============================================================================
+バックエンド					*euphoric_player-backend*
+
+|euphoric_player| はいくつかのバックエンドが用意されており、各環境で実装が分かれていま
+す。
+現在実装されているバックエンドは下記になります。
+
+- "cscript"
+cscript による実装。
+
+- "win_ruby"
+ruby による実装。Windows 用。
+
+
+バックエンドは |g:euphoric_player_backend| で設定する事が出来ます。
+
+Example: >
+	let g:euphoric_player_backend = "win_ruby"
+<
+
+|g:euphoric_player_backend| が設定されていない場合は動作する環境にあったバックエンドが
+自動的に選択されます。
+
+
+==============================================================================
+インターフェース				*euphoric_player-interface*
+
+------------------------------------------------------------------------------
+関数						*euphoric_player-functions*
+
+euphoric_player#playlist_list()			*euphoric#playlist_list()*
+	プレイリストのリストを返します。
+	リストの各要素は辞書で、下記の要素を持ちます。
+		name		プレイリストの名前
+		size		サイズ
+		time		時間
+		playlistID	プレイリストID
+
+euphoric_player#playlist([{name}])		*euphoric#playlist()*
+	{name} のプレイリストの情報を辞書で返します。
+	{name} がない場合は、iTunes で開いているプレイリストを返します。
+	辞書は下記の要素を持ちます。
+		name		プレイリストの名前
+		size		サイズ
+		time		時間
+		playlistID	プレイリストのID
+		tracks		トラック情報のリスト
+	
+	tracks は辞書のリストで下記の要素を持ちます。
+		name		曲名
+		artist		アーティスト名
+		album		アルバム名
+		album_artist	アルバムアーティスト名
+		lyrics		歌詞
+		size		サイズ
+		time		時間
+		played_count	再生数
+		trackID		トラックID
+
+						*euphoric#play()*
+euphoric_player#play_track({trackname} [, {playlistname}])
+	{trackname} （曲名）の曲を再生する。
+	{playlistname} が渡されればそのプレイリストで再生し、なければカレント
+	のプレイリストで再生を行う。
+	{trackname} や {playlistname} が不正で正しく曲が再生されなければ -1 を
+	返す。
+
+
+------------------------------------------------------------------------------
+unite-sources					*euphoric_player-unite-sources*
+
+euphoric_player_playlist			*unite-euphoric_player_playlist*
+	プレイリストの一覧を表示します。
+	選択するとそのプレイリストで *unite-euphoric_player_tracks* が起動しま
+	す。
+
+euphoric_player_tracks:[{playlistname}]		*unite-euphoric_player_tracks*
+	{playlistname} のトラックの一覧を表示します。
+	選択するとその曲が再生されます。
+	{playlistname} が無ければカレントのプレイリストが使用されます。
+
+
+==============================================================================
+設定						*euphoric_player-setting*
+
+------------------------------------------------------------------------------
+変数						*euphoric_player-variables*
+
+g:euphoric_player_backend			*g:euphoric_backend*
+	バックエンドを設定します。
+
+
+
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl

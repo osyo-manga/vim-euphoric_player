@@ -19,39 +19,24 @@ let s:source = {
 \		}
 \	},
 \	"default_action" : "play_track",
+\	"converters" : "converter_euphoric_player_track_default"
 \}
 
 function! s:source.action_table.play_track.func(candidate)
 	call euphoric_player#play_track(a:candidate.action__track_name, a:candidate.action__playlist_name)
 endfunction
 
-function! s:resize(str, len)
-	if  a:len <= 0
-		return ""
-	endif
-	let result = a:str
-	while (strwidth(result) > a:len)
-		let list = split(result, '\zs')
-		if len(list) == 1
-			return ""
-		endif
-		let result = join(list[ :len(list)-2], "")
-	endwhile
-	return result
-endfunction
-
-
 function! s:source.gather_candidates(args, context)
 	let playlist = call("euphoric_player#playlist", a:args)
 	if !has_key(playlist, "tracks")
 		return []
 	endif
-	let format = "%-30S - %-12S - %5S - %S"
+
 	return map(copy(playlist.tracks), '{
-\		"abbr" : s:resize(printf(format, v:val.name, v:val.artist, v:val.time, v:val.album), winwidth("%")-5),
-\		"word" : printf(format, v:val.name, v:val.artist, v:val.time, v:val.album),
+\		"word" : printf("%s - %s", v:val.name, v:val.artist),
 \		"action__track_name"    : v:val.name,
 \		"action__playlist_name" : playlist.name,
+\		"source__track" : v:val
 \	}')
 endfunction
 

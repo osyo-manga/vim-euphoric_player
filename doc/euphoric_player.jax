@@ -45,15 +45,17 @@ Example: >
 ------------------------------------------------------------------------------
 関数						*euphoric_player-functions*
 
-euphoric_player#playlist_list()			*euphoric#playlist_list()*
+euphoric_player#playlist_list()			*euphoric_player#playlist_list()*
 	プレイリストのリストを返します。
 	リストの各要素は辞書で、下記の要素を持ちます。
 		name		プレイリストの名前
 		size		サイズ
 		time		時間
 		playlistID	プレイリストID
+	
+	この関数ではトラックの情報は取得できないので注意して下さい。
 
-euphoric_player#playlist([{name}])		*euphoric#playlist()*
+euphoric_player#playlist([{name}])		*euphoric_player#playlist()*
 	{name} のプレイリストの情報を辞書で返します。
 	{name} がない場合は、iTunes で開いているプレイリストを返します。
 	辞書は下記の要素を持ちます。
@@ -74,7 +76,7 @@ euphoric_player#playlist([{name}])		*euphoric#playlist()*
 		played_count	再生数
 		trackID		トラックID
 
-						*euphoric#play()*
+						*euphoric_player#play()*
 euphoric_player#play_track({trackname} [, {playlistname}])
 	{trackname} （曲名）の曲を再生する。
 	{playlistname} が渡されればそのプレイリストで再生し、なければカレント
@@ -103,7 +105,7 @@ euphoric_player_tracks:[{playlistname}]		*unite-euphoric_player_tracks*
 ------------------------------------------------------------------------------
 変数						*euphoric_player-variables*
 
-g:euphoric_player_backend			*g:euphoric_backend*
+g:euphoric_player_backend			*g:euphoric_player_backend*
 	バックエンドを設定します。
 
 

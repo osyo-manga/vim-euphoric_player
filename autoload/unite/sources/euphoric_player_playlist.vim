@@ -21,6 +21,7 @@ function! s:source.gather_candidates(args, context)
 \		"kind" : "source",
 \		"action__source_name" : "euphoric_player_tracks",
 \		"action__source_args" : [v:val.name],
+\		"source__playlist" : v:val,
 \	}')
 endfunction
 

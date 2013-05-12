@@ -85,14 +85,14 @@ euphoric_player#play_track({trackname} [, {playlistname}])
 	返す。
 
 ==============================================================================
-unite.vim						*euphoric_player-unite*
+unite.vim					*euphoric_player-unite*
 
 ------------------------------------------------------------------------------
 unite-sources					*euphoric_player-unite-sources*
 
 euphoric_player_playlists			*unite-euphoric_player_playlists*
 	プレイリストの一覧を表示します。
-	選択するとそのプレイリストで *unite-euphoric_player_tracks* が起動しま
+	選択するとそのプレイリストで |unite-euphoric_player_tracks| が起動しま
 	す。
 
 euphoric_player_tracks:[{playlistname}]		*unite-euphoric_player_tracks*
@@ -111,8 +111,8 @@ converter_euphoric_player_track_default
 sorter_euphoric_player_track_artist
 	アーティスト名でソートします
 
-				*sorter_euphoric_player_track_artist*
-sorter_euphoric_player_track_artist
+				*sorter_euphoric_player_track_played_count*
+sorter_euphoric_player_track_played_count
 	再生回数でソートします
 
 				*sorter_euphoric_player_track_name*

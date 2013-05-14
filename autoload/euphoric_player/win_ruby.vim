@@ -8,7 +8,7 @@ ruby << EOF
 	require "win32ole"
 	require "kconv"
 
-	$encode = VIM::evaluate("&enc")
+	encode = VIM::evaluate("&enc")
 
 	itunes  = WIN32OLE.new("iTunes.Application")
 	playlists = itunes.librarySource.Playlists
@@ -21,7 +21,7 @@ add(result, {
 	"playlistID" : "#{playlist.PlaylistID}",
 })
 EOS
-		VIM::evaluate(dict.split("\n").join.encode($encode))
+		VIM::evaluate(dict.split("\n").join.encode(encode))
 	}
 EOF
 	return result
@@ -35,54 +35,57 @@ ruby << EOF
 	require "win32ole"
 	require "kconv"
 
-	$encode = VIM::evaluate("&enc")
+	module EuphoriPlayer
+		def add_playlist(playlist)
+			encode = VIM::evaluate("&enc")
+			if !playlist
+				return
+			end
+			dict = <<EOS
+			let result = {
+				"name" : "#{playlist.Name.encode(encode)}",
+				"size" : "#{playlist.Size.to_i}",
+				"time" : "#{playlist.Time}",
+				"playlistID" : "#{playlist.PlaylistID}",
+				"tracks" : [],
+			}
+EOS
+			VIM::command(dict.split("\n").join)
 
-def add_playlist(playlist)
-	if !playlist
-		return
+			tracks_expr = "let result.tracks = ["
+			playlist.Tracks.each { |track|
+				lyrics = track.Lyrics.gsub('"', '\\"').gsub("\r", "\\n")
+				dict = <<EOS
+					{
+						"name" : "#{track.Name.gsub('"', '\\"')}",
+						"artist" : "#{track.Artist.gsub('"', '\\"')}",
+						"album" : "#{track.Album.gsub('"', '\\"')}",
+						"album_artist" : "#{track.AlbumArtist.gsub('"', '\\"')}",
+						"size" : "#{track.Size.to_i}",
+						"time" : "#{track.Time}",
+						"played_count" : "#{track.PlayedCount}",
+						"trackID" : "#{track.TrackID}",
+						"lyrics" : "#{lyrics}",
+					},
+EOS
+				tracks_expr = tracks_expr + dict
+			}
+			tracks_expr += "]"
+			VIM::command(tracks_expr.split("\n").join.encode(encode))
+		end
+
+		module_function:add_playlist
 	end
-	dict = <<EOS
-	let result = {
-		"name" : "#{playlist.Name.encode($encode)}",
-		"size" : "#{playlist.Size.to_i}",
-		"time" : "#{playlist.Time}",
-		"playlistID" : "#{playlist.PlaylistID}",
-		"tracks" : [],
-	}
-EOS
-	VIM::command(dict.split("\n").join)
-
-	tracks_expr = "let result.tracks = ["
-	playlist.Tracks.each { |track|
-		lyrics = track.Lyrics.gsub('"', '\\"').gsub("\r", "\\n")
-		dict = <<EOS
-			{
-				"name" : "#{track.Name.gsub('"', '\\"')}",
-				"artist" : "#{track.Artist.gsub('"', '\\"')}",
-				"album" : "#{track.Album.gsub('"', '\\"')}",
-				"album_artist" : "#{track.AlbumArtist.gsub('"', '\\"')}",
-				"size" : "#{track.Size.to_i}",
-				"time" : "#{track.Time}",
-				"played_count" : "#{track.PlayedCount}",
-				"trackID" : "#{track.TrackID}",
-				"lyrics" : "#{lyrics}",
-			},
-EOS
-		tracks_expr = tracks_expr + dict
-	}
-	tracks_expr += "]"
-	VIM::command(tracks_expr.split("\n").join.encode($encode))
-end
 
 itunes  = WIN32OLE.new("iTunes.Application")
 
 playlist_name = VIM::evaluate("playlist_name").tosjis
 if playlist_name.empty?
-	add_playlist(itunes.CurrentPlaylist)
+	EuphoriPlayer.add_playlist(itunes.CurrentPlaylist)
 else
 	playlist = itunes.librarySource.Playlists.ItemByName(playlist_name)
 	if playlist
-		add_playlist(playlist)
+		EuphoriPlayer.add_playlist(playlist)
 	end
 end
 EOF

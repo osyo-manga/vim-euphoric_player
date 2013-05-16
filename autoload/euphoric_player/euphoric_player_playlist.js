@@ -1,7 +1,7 @@
 // iTunes のプレイリストを JSON で返す
 
 function string(value){
-	return "\"" + value.toString().split("\"").join("'") + "\"";
+	return "\"" + value.toString().split("\"").join("\\\"") + "\"";
 }
 
 function pair(first, second){
@@ -14,7 +14,7 @@ function track_to_json(track){
 		      + pair("name", track.Name)
 		+ "," + pair("artist", track.Artist)
 		+ "," + pair("album_artist", track.AlbumArtist)
-		+ "," + pair("album", track.AlbumArtist)
+		+ "," + pair("album", track.Album)
 		+ "," + pair("time", track.Time)
 		+ "," + pair("played_count", track.PlayedCount)
 		+ "," + pair("size", track.Size)

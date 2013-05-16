@@ -1,7 +1,7 @@
 // iTunes のプレイリストのリストを JSON で返す
 
 function string(value){
-	return "\"" + value + "\""
+	return "\"" + value.toString().split("\"").join("\\\"") + "\"";
 }
 
 function pair(first, second){
